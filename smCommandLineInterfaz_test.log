@@ -1,0 +1,15 @@
+INFO:root:  ****. CommandLineInterfazTest 
+INFO:root:       Testing default mode execution (without any parameter).
+INFO:root:  - Launching command "> python statusmanager.py"
+INFO:root:  - Output of netstat: 
+tcp        0      0 127.0.0.1:9959          0.0.0.0:*               ESCUCHAR   
+INFO:root:  ****. CommandLineInterfazTest 
+INFO:root:       Testing with parameter -p 9091.
+INFO:root:  - Launching command "> python statusmanager.py -p 9091"
+INFO:root:  - Output of netstat: 
+tcp        0      0 127.0.0.1:9091          0.0.0.0:*               ESCUCHAR   
+INFO:root:  ****. CommandLineInterfazTest 
+INFO:root:       Testing with parameter --port/p=9095.
+INFO:root:  - Launching command "> python statusmanager.py --port=9095"
+INFO:root:  - Output of netstat: 
+tcp        0      0 127.0.0.1:9095          0.0.0.0:*               ESCUCHAR   

@@ -1,0 +1,96 @@
+#!/usr/bin/python
+"""
+=========================================================
+ This is a TestSuite to test the statusmanager.py command
+   to run tests: ./test_StatusManager.py  
+	or	 python test_StatusManager.py
+      (verbose): python test_StatusManager.py -v
+=========================================================
+ by Diego Izquierdo Fernandez. QualityObjects
+"""
+
+import unittest, test_sm_TestSuper, commands, subprocess, time, logging, urllib
+
+logging.basicConfig(filename='smCommandLineInterfaz_test.log', filemode='w', level=logging.INFO)
+
+"""
+TITLE: 
+  CommandLineInterfazTest
+
+SUMARY: 
+  The purpose of this test is verify that the command 'statusmanager.py' is launched 
+  with or without the arguments specified in the 'Status Manager Specification' doc.
+"""
+class CommandLineInterfazTest(test_sm_TestSuper.TestSMSuper):
+		
+    def test_defaultmode(self):
+	'''
+	"if it is not specified, status manager listens on the default port of 9959"
+	'''
+	logging.info('  ****. CommandLineInterfazTest ')
+	logging.info('       Testing default mode execution (without any parameter).')
+	logging.info('  - Launching command "> python statusmanager.py"')
+	try:	
+	    test_sm_TestSuper.procesSM = subprocess.Popen(["/usr/bin/python","statusmanager.py"], stdout=subprocess.PIPE)	    
+	    time.sleep(0.2)
+	except IOError as e:
+	    logging.info('  - ERROR- Launching command "statusmanager.py"')
+            self.assertTrue(False, '  - FAIL- Launching command "statusmanager.py')	  
+	output = commands.getoutput('netstat -an| grep 9959')
+	logging.info("  - Output of netstat: \n" + output)	
+	if (output.find('127.0.0.1:9959') == -1):
+	    self.assertTrue(False, '  - FAIL- There is not service listening on port 9959')	    	
+	else:
+	    self.assertTrue(True, '  - OK- There is a service listening on port 9959')        
+	return True
+
+    def test_portSpecificationA(self):
+	'''
+	" If the --port/p argument is specified, that port number is used 
+	  to listen for HTTP request"
+	'''
+	logging.info('  ****. CommandLineInterfazTest ')
+	logging.info('       Testing with parameter --port/p=9095.')
+	#now with --port option
+	logging.info('  - Launching command "> python statusmanager.py --port=9095"')
+	try:	
+	    test_sm_TestSuper.procesSM = subprocess.Popen(["/usr/bin/python","statusmanager.py", "--port=9095"], stdout=subprocess.PIPE)
+	    time.sleep(0.5)
+	except IOError as e:
+	    logging.info('  - ERROR- Launching command "statusmanager.py --port=9095"')
+            self.assertTrue(False, '  - FAIL- Launching command "statusmanager.py --port=9095')	  
+	output = commands.getoutput('netstat -an| grep 9095')
+	logging.info("  - Output of netstat: \n" + output)	
+	if (output.find('127.0.0.1:9095') == -1):
+	    self.assertTrue(False, '  - FAIL- There is not service listening on port 9095')	    	
+	else:
+	    self.assertTrue(True, '  - OK- There is a service listening on port 9095')
+	return True
+
+    def test_portSpecificationB(self):
+	'''
+	" If the --port/p argument is specified, that port number is used 
+	  to listen for HTTP request"
+	'''
+	logging.info('  ****. CommandLineInterfazTest ')
+	logging.info('       Testing with parameter -p 9091.')	
+	logging.info('  - Launching command "> python statusmanager.py -p 9091"')	
+	try:	
+	    test_sm_TestSuper.procesSM = subprocess.Popen(["/usr/bin/python","statusmanager.py", "-p 9091"], stdout=subprocess.PIPE)
+	    time.sleep(0.5)
+	except IOError as e:
+	    logging.info('  - ERROR- Launching command "statusmanager.py --p 9095"')
+            self.assertTrue(False, '  - FAIL- Launching command "statusmanager.py --p 9091')	  
+	output = commands.getoutput('netstat -an| grep 9091')
+	logging.info("  - Output of netstat: \n" + output)	
+	if (output.find('127.0.0.1:9091') == -1):
+	    self.assertTrue(False, '  - FAIL- There is not service listening on port 9091')	    	
+	else:
+	    self.assertTrue(True, '  - OK- There is a service listening on port 9091')
+	return True
+
+    def runTest(self):
+	if (CommandLineInterfazTest.test_defaultmode(self)):
+		print ".......... Ok"
+	CommandLineInterfazTest.test_portSpecificationB(self)
+	CommandLineInterfazTest.test_portSpecificationA(self)
